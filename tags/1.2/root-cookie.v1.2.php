@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: root Cookie Path
-Plugin URI: http://www.linickx.com/index.php?content=php#root-cookie.txt
+Plugin URI: http://www.linickx.com/blog/archives/274/root-cookie-v12-wordpress-plugin/
 Description: Changes the cookie default path to / (i.e. the whole domain.com not just domain.com/blog)
 Author: Nick [LINICKX] Bettison
 Version: 1.2
