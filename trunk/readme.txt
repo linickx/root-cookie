@@ -2,9 +2,9 @@
 Contributors: Nick  Bettison - LINICKX
 Donate link: http://www.linickx.com/index.php?content=donate
 Tags: login, logout, authentication, cookie
-Requires at least: 2.0.9
-Tested up to: 2.1.2
-Stable tag: 1.2
+Requires at least: 2.6
+Tested up to: 2.6.1
+Stable tag: 1.3
 
 root-cookie changes the path of your cookie to the full domain; i.e. from mydomain.com/wordpress to mydomain.com
 
