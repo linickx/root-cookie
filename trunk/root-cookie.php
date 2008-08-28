@@ -13,7 +13,7 @@ ChangeLOG:
 V 1.0 : Original Release.
 V 1.1 : Added the safety hook 'if(!function_exists('wp_setcookie')' since WP2.1 crashed out.
 V 1.2 : Added logout function, as default on didn't work, thanks Aja! ( http://www.ajalapus.com/  )
-V 1.3: Updated to support new WP2.6 Cookes, credz to Scott Kingsley Clark  (http://www.vizioninteractive.com) for kicking my ass into getting this done!
+V 1.3 : Updated to support new WP2.6 Cookies, credz to Scott Kingsley Clark  (http://www.vizioninteractive.com) for kicking my ass into getting this done!
 */
 
 
