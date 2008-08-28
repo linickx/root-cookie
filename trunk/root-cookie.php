@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: root Cookie Path
-Plugin URI: http://www.linickx.com/blog/archives/274/root-cookie-v12-wordpress-plugin/
+Plugin URI: http://www.linickx.com/index.php?content=php#root-cookie.txt
 Description: Changes the cookie default path to / (i.e. the whole domain.com not just domain.com/blog)
 Author: Nick [LINICKX] Bettison
-Version: 1.2
+Version: 1.3
 Author URI: http://www.linickx.com
 License: Free to use non-commercially.
 Warranties: None.
@@ -13,49 +13,89 @@ ChangeLOG:
 V 1.0 : Original Release.
 V 1.1 : Added the safety hook 'if(!function_exists('wp_setcookie')' since WP2.1 crashed out.
 V 1.2 : Added logout function, as default on didn't work, thanks Aja! ( http://www.ajalapus.com/  )
+V 1.3: Updated to support new WP2.6 Cookes, credz to Scott Kingsley Clark  (http://www.vizioninteractive.com) for kicking my ass into getting this done!
 */
 
-if(!function_exists('wp_setcookie')) {
 
-function wp_setcookie($username, $password, $already_md5 = false, $home = '', $siteurl = '', $remember = false) {
-	if ( !$already_md5 )
-		$password = md5( md5($password) ); // Double hash the password in the cookie.
+# OK, so we rock up and setup a constant....
+define('ROOT_COOKIE', '/' );
 
-	if ( empty($home) )
-		$cookiepath = '/'; // Was: $cookiepath = COOKIEPATH;
-	else
-		$cookiepath = '/'; // Was: $cookiepath = preg_replace('|https?://[^/]+|i', '', $home . '/' );
+# Then we paste the WP functions from /wp-includes/pluggable.php
+# ...
+# and to finish we replace COOKIEPATH, PLUGINS_COOKIE_PATH  and ADMIN_COOKIE_PATH with ROOT_COOKIE, job done!
 
-	if ( empty($siteurl) ) {
-		$sitecookiepath = '/'; // Was: $sitecookiepath = SITECOOKIEPATH;
-		#$cookiehash = COOKIEHASH; // We Don't need this :-)
+if ( !function_exists('wp_set_auth_cookie') ) :
+/**
+ * Sets the authentication cookies based User ID.
+ *
+ * The $remember parameter increases the time that the cookie will be kept. The
+ * default the cookie is kept without remembering is two days. When $remember is
+ * set, the cookies will be kept for 14 days or two weeks.
+ *
+ * @since 2.5
+ *
+ * @param int $user_id User ID
+ * @param bool $remember Whether to remember the user or not
+ */
+function wp_set_auth_cookie($user_id, $remember = false, $secure = '') {
+	if ( $remember ) {
+		$expiration = $expire = time() + 1209600;
 	} else {
-		$sitecookiepath = '/'; // Was: $sitecookiepath = preg_replace('|https?://[^/]+|i', '', $siteurl . '/' );
-		#$cookiehash = md5($siteurl); // We Don't need this either :-)
-	}
-
-	if ( $remember )
-		$expire = time() + 31536000;
-	else
+		$expiration = time() + 172800;
 		$expire = 0;
-
-	setcookie(USER_COOKIE, $username, $expire, $cookiepath, COOKIE_DOMAIN);
-	setcookie(PASS_COOKIE, $password, $expire, $cookiepath, COOKIE_DOMAIN);
-
-	if ( $cookiepath != $sitecookiepath ) {
-		setcookie(USER_COOKIE, $username, $expire, $sitecookiepath, COOKIE_DOMAIN);
-		setcookie(PASS_COOKIE, $password, $expire, $sitecookiepath, COOKIE_DOMAIN);
 	}
-}
 
-}
+	if ( '' === $secure )
+		$secure = is_ssl() ? true : false;
 
-if(!function_exists('wp_clearcookie')) {
+	if ( $secure ) {
+		$auth_cookie_name = SECURE_AUTH_COOKIE;
+		$scheme = 'secure_auth';
+	} else {
+		$auth_cookie_name = AUTH_COOKIE;
+		$scheme = 'auth';
+	}
 
-        function wp_clearcookie() {
-                setcookie(USER_COOKIE, ' ', time() - 31536000, '/',COOKIE_DOMAIN);
-                setcookie(PASS_COOKIE, ' ', time() - 31536000, '/',COOKIE_DOMAIN);
-        }
+	$auth_cookie = wp_generate_auth_cookie($user_id, $expiration, $scheme);
+	$logged_in_cookie = wp_generate_auth_cookie($user_id, $expiration, 'logged_in');
+
+	do_action('set_auth_cookie', $auth_cookie, $expire, $expiration, $user_id, $scheme);
+	do_action('set_logged_in_cookie', $logged_in_cookie, $expire, $expiration, $user_id, 'logged_in');
+
+	setcookie($auth_cookie_name, $auth_cookie, $expire, ROOT_COOKIE, COOKIE_DOMAIN, $secure);
+	setcookie($auth_cookie_name, $auth_cookie, $expire, ROOT_COOKIE, COOKIE_DOMAIN, $secure);
+	setcookie(LOGGED_IN_COOKIE, $logged_in_cookie, $expire, ROOT_COOKIE, COOKIE_DOMAIN);
+	if ( ROOT_COOKIE != SITECOOKIEPATH )
+		setcookie(LOGGED_IN_COOKIE, $logged_in_cookie, $expire, SITECOOKIEPATH, COOKIE_DOMAIN);
 }
+endif;
+
+if ( !function_exists('wp_clear_auth_cookie') ) :
+/**
+ * Removes all of the cookies associated with authentication.
+ *
+ * @since 2.5
+ */
+function wp_clear_auth_cookie() {
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+
+	// Old cookies
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+
+	// Even older cookies
+	setcookie(USER_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(PASS_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(USER_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	setcookie(PASS_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+}
+endif;
 
 ?>
