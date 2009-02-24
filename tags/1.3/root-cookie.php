@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: root Cookie Path
-Plugin URI: http://www.linickx.com/archives/466/root-cookie-for-wp26root-cookie-for-wp26
+Plugin URI: http://www.linickx.com/archives/466/root-cookie-for-wp26
 Description: Changes the cookie default path to / (i.e. the whole domain.com not just domain.com/blog)
 Author: Nick [LINICKX] Bettison
 Version: 1.3
