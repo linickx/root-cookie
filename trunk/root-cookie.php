@@ -171,7 +171,7 @@ function rootcookie_options ()
 		if( $_POST[ $hidden_field_name ] == 'Y' )
 			{
 				$opt_val = 0;
-				if(isset($_POST[ $opt_name ]))
+				if(isset($_POST['cookiepath_subdomain']))
 					{
 						$opt_val = 1;
 					}
