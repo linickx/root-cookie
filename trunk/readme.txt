@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: Nick  Bettison - LINICKX, sc0ttkclark
 Donate link: http://www.linickx.com/index.php?content=donate
-Tags: login, logout, authentication, cookie, subdomains
+Tags: login, logout, authentication, cookie, subdomains, root, path
 Requires at least: 2.6
 Tested up to: 2.7.1
 Stable tag: 1.4
@@ -43,6 +43,17 @@ e.g.
 * 1.3 : Updated to support new WP2.6 Cookies, credz to Scott Kingsley Clark  (http://www.vizioninteractive.com) for kicking my ass into getting this done!
 * 1.4 : WordPress 2.7 Compatability Update, credz to Edward Laverick (http://www.rndout.com/) for Raising.
 * 1.5 : Added options panel to allow for cookies to be used across subdomains.
+
+== Multi-blog Installs ==
+
+It is possible to use this plugin such that if you are logged into one WordPress site, then you are auto-magically logged into the second, but there are some caveats!
+
+1. The Username & Password _MUST_ be the same on Both!
+1. The Security Keys http://codex.wordpress.org/Editing_wp-config.php#Security_Keys Need to be the same on Both!
+
+== Multi-blog Installs ==
+
+
 
 == Support ==
 
