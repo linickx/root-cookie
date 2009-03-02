@@ -171,12 +171,19 @@ function rootcookie_options ()
 		if( $_POST[ $hidden_field_name ] == 'Y' )
 			{
 				$opt_val = 0;
-				if(isset($_POST['cookiepath_subdomain']))
+				if(isset($_POST['rootcookie_subdomain']))
 					{
 						$opt_val = 1;
+						$checked=true;
+					} else {
+						$opt_val = 0;
+                                                $checked=false;
 					}
 				update_option( $opt_name, $opt_val );
-				echo '<div class="updated"><p><strong>'._('Options saved.', 'cookiepath_trans_domain' ).'</strong></p></div>';
+				echo '<div class="updated"><p><strong>'._('Options saved.').'</strong></p></div>';
+
+				// Re-Read Val so Form Prints Correctly.
+				$opt_val = get_option( $opt_name );
 			}
 ?>
 <div class="wrap">
@@ -184,7 +191,7 @@ function rootcookie_options ()
 <form name="plugin_options" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
 <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y" />
 <p><?php _e("Allow Cookies to go across All Subdomains:", 'rootcookie_trans_domain' ); ?> 
-<input type="checkbox" name="<?php echo $opt_name; ?>" value="<?php echo $opt_val; ?>"<?php if($checked){echo " CHECKED";} ?> />
+<input type="checkbox" name="rootcookie_subdomain" value="<?php echo $opt_val; ?>"<?php if($checked){echo " CHECKED";} ?> />
 </p><hr />
 <p class="submit">
 <input type="submit" name="Submit" value="<?php _e('Update Options', 'rootcookie_trans_domain' ) ?>" />
