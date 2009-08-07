@@ -36,13 +36,25 @@ e.g.
 1. Log in
 1. Done :o)
 
-== Change LOG ==
-* 1.0 : Original Release.
-* 1.1 : Added the safety hook 'if(!function_exists('wp_setcookie')' since WP2.1 crashed out.
-* 1.2 : Added logout function, as default on didn't work, thanks Aja! ( http://www.ajalapus.com/  )
-* 1.3 : Updated to support new WP2.6 Cookies, credz to Scott Kingsley Clark  (http://www.vizioninteractive.com) for kicking my ass into getting this done!
-* 1.4 : WordPress 2.7 Compatability Update, credz to Edward Laverick (http://www.rndout.com/) for Raising.
-* 1.5 : Added options panel to allow for cookies to be used across subdomains.
+== Changelog ==
+
+= 1.5 =
+* Added options panel to allow for cookies to be used across subdomains.
+
+= 1.4 =
+* WordPress 2.7 Compatability Update, credz to Edward Laverick (http://www.rndout.com/) for Raising.
+
+= 1.3 =
+* Updated to support new WP2.6 Cookies, credz to Scott Kingsley Clark  (http://www.vizioninteractive.com) for kicking my ass into getting this done!
+
+= 1.2 =
+*  Added logout function, as default on didn't work, thanks Aja! ( http://www.ajalapus.com/  )
+
+= 1.1 =
+* Added the safety hook 'if(!function_exists('wp_setcookie')' since WP2.1 crashed out.
+
+= 1.0 =
+*Original Release.
 
 == Multi-blog Installs ==
 
