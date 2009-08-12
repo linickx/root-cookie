@@ -32,6 +32,7 @@ e.g.
 
 1. Upload `root-cookie.php` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
+1. Optinally enable subdomains support in admin dashboard
 1. Log out
 1. Log in
 1. Done :o)
@@ -40,6 +41,8 @@ e.g.
 
 = 1.5 =
 * Added options panel to allow for cookies to be used across subdomains.
+* Subdomain can be guessed or manually set
+* root cookie News & Tutorials added to admin page
 
 = 1.4 =
 * WordPress 2.7 Compatability Update, credz to Edward Laverick (http://www.rndout.com/) for Raising.
@@ -56,15 +59,36 @@ e.g.
 = 1.0 =
 *Original Release.
 
+== Frequently Asked Questions ==
+
+= What is root cookie path support? =
+This is the basic functionality of the plugin, it removes the path from the cookie.
+e.g
+cookie set as www.domain.com/wordpress becomes www.doamin.com 
+
+= How to I enable root cookie path support? =
+You don't need to, by default the path is removed from the cookie just by enabling it
+
+= What is root cookie subdomain support? =
+This is new as of version 1.5, root cookie can now change the wordpress cookie to be accesiable across subdomains.
+e.g.
+cookie set as www.domain.com becomains domain.com
+
+= How to I enable root cookie subdomain support? =
+In the wordpress administrator dashboard, select root cookie and tick the box!
+
+= How do I manually set the domain / subdomain of the cookie? =
+In the wordpress administrator dashboard, select root cookie and unselect "Allow Cookies to go across All Subdomains" and in the "Domain Name" box type in you domain such as domain.com or domain.co.uk
+
+= root cookie subdomains doesn't work for me! =
+Try maunally setting the cookie, see above.
+
 == Multi-blog Installs ==
 
 It is possible to use this plugin such that if you are logged into one WordPress site, then you are auto-magically logged into the second, but there are some caveats!
 
 1. The Username & Password _MUST_ be the same on Both!
 1. The Security Keys http://codex.wordpress.org/Editing_wp-config.php#Security_Keys Need to be the same on Both!
-
-== Multi-blog Installs ==
-
 
 
 == Support ==

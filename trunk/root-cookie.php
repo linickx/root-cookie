@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: root Cookie Path
-Plugin URI: http://www.linickx.com/archives/831/root-cookie-path-14-an-update-for-wordpress-27
+Plugin Name: root Cookie
+Plugin URI: http://www.linickx.com/archives/1856/introducing-root-cookie-1-5-now-with-subdomain-support
 Description: Changes the cookie default path to / (i.e. the whole domain.com not just domain.com/blog) with an option to go across subdomains
 Author: Nick [LINICKX] Bettison and Vizion Interactive, Inc
 Version: 1.5
@@ -60,8 +60,11 @@ function wp_set_auth_cookie($user_id, $remember = false, $secure = '') {
 	do_action('set_logged_in_cookie', $logged_in_cookie, $expire, $expiration, $user_id, 'logged_in');
 	
 	$subdomain = get_option('rootcookie_subdomain');
+	$rootcookie_subdomain_manual = get_option('rootcookie_subdomain_manual');
+
 	if($subdomain==1)
 		{
+			# Use Scotts implementation
 			$info = get_bloginfo('url');
 			$info = parse_url($info);
 			$info = $info['host'];
@@ -71,7 +74,16 @@ function wp_set_auth_cookie($user_id, $remember = false, $secure = '') {
 			elseif(3<count($exp)){$exp = array_reverse($exp); $domain = '.'.$exp[1].'.'.$exp[0];}
 			else{$domain = COOKIE_DOMAIN;}
 		}
-	else{$domain = COOKIE_DOMAIN;}
+	elseif (!is_null($rootcookie_subdomain_manual))
+                {
+			# Use manual domain name setting
+                        $domain = $rootcookie_subdomain_manual;
+                }
+	else
+		{
+			# Default
+			$domain = COOKIE_DOMAIN;
+	}
 
 	// Set httponly if the php version is >= 5.2.0
 	if ( version_compare(phpversion(), '5.2.0', 'ge') ) {
@@ -108,6 +120,9 @@ function wp_clear_auth_cookie() {
 	do_action('clear_auth_cookie');
 	
 	$subdomain = get_option('rootcookie_subdomain');
+	$rootcookie_subdomain_manual = get_option('rootcookie_subdomain_manual');
+
+	# As ABOVE!
 	if($subdomain==1)
 		{
 			$info = get_bloginfo('url');
@@ -119,7 +134,15 @@ function wp_clear_auth_cookie() {
 			elseif(3<count($exp)){$exp = array_reverse($exp); $domain = '.'.$exp[1].'.'.$exp[0];}
 			else{$domain = COOKIE_DOMAIN;}
 		}
-	else{$domain = COOKIE_DOMAIN;}
+	elseif (!is_null($rootcookie_subdomain_manual)) 
+		{
+			$domain = $rootcookie_subdomain_manual;
+		}
+	else
+		{
+			$domain = COOKIE_DOMAIN;
+	}
+
 
 	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
 	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
@@ -153,50 +176,99 @@ function rootcookie_activate ()
 	}
 function rootcookie_menu ()
 	{
-		add_options_page('root Cookie Path Options', 'root Cookie Path', 8, __FILE__, 'rootcookie_options');
+		add_options_page('root Cookie Options', 'root Cookie ', 8, __FILE__, 'rootcookie_options');
 	}
 function rootcookie_options ()
 	{
-		// variables for the field and option names
-		$opt_name = 'rootcookie_subdomain';
-		$hidden_field_name = 'rootcookie_submit_hidden';
 	
 		// Read in existing option value from database
-		$opt_val = get_option( $opt_name );
+		$rootcookie_subdomain_on = get_option('rootcookie_subdomain');
+		$rootcookie_subdomain_manual = get_option('rootcookie_subdomain_manual');
+
 		$checked=false;
-		if($opt_val==1){$checked=true;}
+		if($rootcookie_subdomain_on==1){$checked=true;}
 	
 		// See if the user has posted us some information
 		// If they did, this hidden field will be set to 'Y'
-		if( $_POST[ $hidden_field_name ] == 'Y' )
+		if( $_POST['rootcookie_submit_hidden'] == 'Y' )
 			{
-				$opt_val = 0;
 				if(isset($_POST['rootcookie_subdomain']))
 					{
-						$opt_val = 1;
+						# This enables the guessing that the domain written by Scott
+						$rootcookie_subdomain_on = 1;
 						$checked=true;
 					} else {
-						$opt_val = 0;
+						$rootcookie_subdomain_on = 0;
                                                 $checked=false;
+
+						# Implement  a manual domain method for .co.uk or .co.jp etc
+						if(isset($_POST['rootcookie_subdomain_manual'])) {
+							$rootcookie_subdomain_manual = $_POST['rootcookie_subdomain_manual'];
+							update_option('rootcookie_subdomain_manual', $rootcookie_subdomain_manual );
+						}
+
+
 					}
-				update_option( $opt_name, $opt_val );
+
+				
+				update_option('rootcookie_subdomain', $rootcookie_subdomain_on );
 				echo '<div class="updated"><p><strong>'._('Options saved.').'</strong></p></div>';
 
 				// Re-Read Val so Form Prints Correctly.
-				$opt_val = get_option( $opt_name );
+				$rootcookie_subdomain_on = get_option('rootcookie_subdomain');
+				$rootcookie_subdomain_manual = get_option('rootcookie_subdomain_manual');
 			}
 ?>
 <div class="wrap">
-<?php echo "<h2>" . __( 'root Cookie Path Options', 'rootcookie_trans_domain' ) . "</h2>"; ?>
+<?php echo "<h2>" . __( 'root Cookie Options', 'rootcookie_trans_domain' ) . "</h2>"; ?>
 <form name="plugin_options" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
-<input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y" />
-<p><?php _e("Allow Cookies to go across All Subdomains:", 'rootcookie_trans_domain' ); ?> 
-<input type="checkbox" name="rootcookie_subdomain" value="<?php echo $opt_val; ?>"<?php if($checked){echo " CHECKED";} ?> />
+<input type="hidden" name="rootcookie_submit_hidden" value="Y" />
+
+<p>
+
+<table class="form-table">
+
+<tr valign="top">
+	<th scope="row"><?php _e("Allow Cookies to go across All Subdomains:", 'rootcookie_trans_domain' ); ?> </th>
+	<td><input type="checkbox" name="rootcookie_subdomain" value="<?php echo $rootcookie_subdomain_on; ?>"<?php if($checked){echo " CHECKED";} ?> /><span class="description">Tick this box and we'll try to <b>guess</b> your domain and enable the cookie.</span></td>
+</tr>
+
+<?php
+if(!$checked){
+?>
+<tr valign="top">
+<th scope="row">OR</th>
+<td><!-- ... --></td>
+</tr>
+
+<tr valign="top">
+      <th scope="row"><?php _e('Domain Name') ?></th>
+      <td><input name="rootcookie_subdomain_manual" id="rootcookie_subdomain_manual" class="regular-text" value="<?php echo $rootcookie_subdomain_manual; ?>" /><span class="description"><b>Optional:</b> Put you domain name in here example <code>linickx.co.uk</code> and we'll set the cookie to that.</span>
+      </td>
+    </tr>
+<?php
+}
+?>
+</table>
+
 </p><hr />
 <p class="submit">
 <input type="submit" name="Submit" value="<?php _e('Update Options', 'rootcookie_trans_domain' ) ?>" />
 </p>
 </form>
+
+<?php
+	# Let's tell users about RK :)
+	$lnx_feed = fetch_feed('http://www.linickx.com/archives/tag/root-cookie/feed');
+	echo "<h3>Root Cookie News &amp; Tutorials</h3>";
+	echo "<ul>";
+	foreach ($lnx_feed->get_items() as $item){
+			printf('<li><a href="%s">%s</a></li>',$item->get_permalink(), $item->get_title());
+	}
+	echo "</ul>";
+
+?>
+<p><small><a href="http://www.linickx.com/archives/tag/root-cookie/feed">Subcribe to this feed</a></small></p>
 </div>
 <?php
 	}
