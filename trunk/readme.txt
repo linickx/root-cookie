@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: Nick  Bettison - LINICKX, sc0ttkclark
+Contributors: linickx, sc0ttkclark
 Donate link: http://www.linickx.com/index.php?content=donate
 Tags: login, logout, authentication, cookie, subdomains, root, path
 Requires at least: 2.6
