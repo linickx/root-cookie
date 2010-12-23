@@ -4,7 +4,7 @@ Plugin Name: root Cookie
 Plugin URI: http://www.linickx.com/archives/1856/introducing-root-cookie-1-5-now-with-subdomain-support
 Description: Changes the cookie default path to / (i.e. the whole domain.com not just domain.com/blog) with an option to go across subdomains
 Author: Nick [LINICKX] Bettison and Vizion Interactive, Inc
-Version: 1.5
+Version: 1.5.1
 Author URI: http://www.linickx.com
 License: Free to use non-commercially.
 Warranties: None.
@@ -32,18 +32,18 @@ if ( !function_exists('wp_set_auth_cookie') ) :
  * @since 2.5
  *
  * @param int $user_id User ID
- * @param bool $remember Whether to remember the user or not
+ * @param bool $remember Whether to remember the user
  */
-function wp_set_auth_cookie($user_id, $remember = false, $secure = '') {
-	if ( $remember ) {
-		$expiration = $expire = time() + 1209600;
-	} else {
-		$expiration = time() + 172800;
-		$expire = 0;
-	}
-
-	if ( '' === $secure )
-		$secure = is_ssl() ? true : false;
+	function wp_set_auth_cookie($user_id, $remember = false, $secure = '') {
+		if ( $remember ) {
+			$expiration = $expire = time() + apply_filters('auth_cookie_expiration', 1209600, $user_id, $remember);
+		} else {
+			$expiration = time() + apply_filters('auth_cookie_expiration', 172800, $user_id, $remember);
+			$expire = 0;
+		}
+		
+		if ( '' === $secure )
+			$secure = is_ssl();		
 
 	if ( $secure ) {
 		$auth_cookie_name = SECURE_AUTH_COOKIE;
