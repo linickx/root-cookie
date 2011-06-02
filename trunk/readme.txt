@@ -39,6 +39,12 @@ e.g.
 
 == Changelog ==
 
+= 1.5.2 =
+* Contextual Help
+
+= 1.5.1 =
+* Minor Update to bring code inline with WordPress 3.0.3
+
 = 1.5 =
 * Added options panel to allow for cookies to be used across subdomains.
 * Subdomain can be guessed or manually set

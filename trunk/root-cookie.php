@@ -4,7 +4,7 @@ Plugin Name: root Cookie
 Plugin URI: http://www.linickx.com/archives/1856/introducing-root-cookie-1-5-now-with-subdomain-support
 Description: Changes the cookie default path to / (i.e. the whole domain.com not just domain.com/blog) with an option to go across subdomains
 Author: Nick [LINICKX] Bettison and Vizion Interactive, Inc
-Version: 1.5.1
+Version: 1.5.2
 Author URI: http://www.linickx.com
 License: Free to use non-commercially.
 Warranties: None.
@@ -176,7 +176,18 @@ function rootcookie_activate ()
 	}
 function rootcookie_menu ()
 	{
-		add_options_page('root Cookie Options', 'root Cookie ', 8, __FILE__, 'rootcookie_options');
+		global $rootcookie_admin_hook;
+		
+		$rootcookie_admin_hook = add_options_page('root Cookie Options', 'root Cookie ', 'manage_options' , 'root-cookie', 'rootcookie_options');
+	}
+function rootcookie_menu_help($contextual_help, $screen_id, $screen) 
+	{
+		global $rootcookie_admin_hook;
+
+		if ($screen_id == $rootcookie_admin_hook) {
+			$contextual_help = file_get_contents(WP_PLUGIN_DIR . '/root-cookie/admin-options-help.inc.php'); // the help html
+		}
+	return $contextual_help;
 	}
 function rootcookie_options ()
 	{
@@ -274,6 +285,11 @@ if(!$checked){
 	}
 
 // Run all actions and hooks at the end to keep it tidy
-add_action('admin_menu', 'rootcookie_menu');
+	
+	if (is_admin()) { // only run admin stuff if we're an admin.
+		add_action('admin_menu', 'rootcookie_menu');
+		add_action('contextual_help', 'rootcookie_menu_help', 10, 3);
+	}
+	
 register_activation_hook( __FILE__,'rootcookie_activate');
 ?>
