@@ -270,7 +270,7 @@ if(!$checked){
 
 <?php
 	# Let's tell users about RK :)
-	$lnx_feed = fetch_feed('http://www.linickx.com/archives/tag/root-cookie/feed');
+	$lnx_feed = fetch_feed('http://www.linickx.com/tag/root-cookie/feed');
 	echo "<h3>Root Cookie News &amp; Tutorials</h3>";
 	echo "<ul>";
 	foreach ($lnx_feed->get_items() as $item){
