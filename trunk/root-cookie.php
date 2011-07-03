@@ -4,7 +4,7 @@ Plugin Name: root Cookie
 Plugin URI: http://www.linickx.com/archives/1856/introducing-root-cookie-1-5-now-with-subdomain-support
 Description: Changes the cookie default path to / (i.e. the whole domain.com not just domain.com/blog) with an option to go across subdomains
 Author: Nick [LINICKX] Bettison and Vizion Interactive, Inc
-Version: 1.5.2
+Version: 1.5.3
 Author URI: http://www.linickx.com
 License: Free to use non-commercially.
 Warranties: None.
