@@ -195,9 +195,13 @@ function rootcookie_options ()
 		// Read in existing option value from database
 		$rootcookie_subdomain_on = get_option('rootcookie_subdomain');
 		$rootcookie_subdomain_manual = get_option('rootcookie_subdomain_manual');
+		$rootcookie_donate = get_option('rootcookie_donate');
 
 		$checked=false;
 		if($rootcookie_subdomain_on==1){$checked=true;}
+		
+		$donate=false;
+		if($rootcookie_donate==1){$donate=true;}
 	
 		// See if the user has posted us some information
 		// If they did, this hidden field will be set to 'Y'
@@ -220,6 +224,13 @@ function rootcookie_options ()
 
 
 					}
+				
+				if(isset($_POST['rootcookie_donate'])) {
+					
+					$rootcookie_donate = 1;
+					$donate=true;
+					update_option('rootcookie_donate', $rootcookie_donate );
+				}
 
 				
 				update_option('rootcookie_subdomain', $rootcookie_subdomain_on );
@@ -266,6 +277,23 @@ if(!$checked){
 <p class="submit">
 <input type="submit" name="Submit" value="<?php _e('Update Options', 'rootcookie_trans_domain' ) ?>" />
 </p>
+
+<?php
+	if ( !$donate ) {
+		?>
+<div style="float:right; text-align:center" >
+<a href="http://www.linickx.com/donate">
+<img src="<?php echo plugins_url( 'root-cookie/donate.png' , dirname(__FILE__) )?>" alt="donate" /> <br />
+<small>Buy the author a beer to say thanks!</small>
+</a> <br />
+<small>
+<input type="checkbox" name="rootcookie_donate" value="1" ><em>Tick, yep done that!</em>
+</small>
+</div>
+<?php
+	}
+	?>
+
 </form>
 
 <?php
@@ -273,11 +301,15 @@ if(!$checked){
 	$lnx_feed = fetch_feed('http://www.linickx.com/tag/root-cookie/feed');
 	echo "<h3>Root Cookie News &amp; Tutorials</h3>";
 	echo "<ul>";
-	foreach ($lnx_feed->get_items() as $item){
-			printf('<li><a href="%s">%s</a></li>',$item->get_permalink(), $item->get_title());
+	if (isset($lnx_feed->errors)) { 
+		echo '<li><b>Error Downloading Feed</b>. Looks like you are going to have to visit <a href="http://www.linickx.com/tag/root-cookie/feed">http://www.linickx.com/tag/root-cookie/feed</a> manually to keep up with the news! </li>';
+	} else {
+		
+		foreach ($lnx_feed->get_items() as $item){
+				printf('<li><a href="%s">%s</a></li>',$item->get_permalink(), $item->get_title());
+		}
 	}
 	echo "</ul>";
-
 ?>
 <p><small><a href="http://www.linickx.com/archives/tag/root-cookie/feed">Subcribe to this feed</a></small></p>
 </div>
