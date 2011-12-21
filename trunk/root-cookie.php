@@ -4,7 +4,7 @@ Plugin Name: root Cookie
 Plugin URI: http://www.linickx.com/archives/1856/introducing-root-cookie-1-5-now-with-subdomain-support
 Description: Changes the cookie default path to / (i.e. the whole domain.com not just domain.com/blog) with an option to go across subdomains
 Author: Nick [LINICKX] Bettison and Vizion Interactive, Inc
-Version: 1.5.3
+Version: 1.5.4
 Author URI: http://www.linickx.com
 License: Free to use non-commercially.
 Warranties: None.
@@ -85,27 +85,13 @@ if ( !function_exists('wp_set_auth_cookie') ) :
 			$domain = COOKIE_DOMAIN;
 	}
 
-	// Set httponly if the php version is >= 5.2.0
-	if ( version_compare(phpversion(), '5.2.0', 'ge') ) {
-		setcookie($auth_cookie_name, $auth_cookie, $expire, ROOT_COOKIE, $domain, $secure);
-		/** Duplicate of above - Created by Find & Replace
-		setcookie($auth_cookie_name, $auth_cookie, $expire, ROOT_COOKIE, $domain, $secure);
-		*/
-		setcookie(LOGGED_IN_COOKIE, $logged_in_cookie, $expire, ROOT_COOKIE, $domain);
-		if ( COOKIEPATH != SITECOOKIEPATH )
-			setcookie(LOGGED_IN_COOKIE, $logged_in_cookie, $expire, ROOT_COOKIE, $domain, false, true);
-	} else {
-		$cookie_domain = $domain;
-		if ( !empty($cookie_domain) )
-			$cookie_domain .= '; HttpOnly';
-		setcookie($auth_cookie_name, $auth_cookie, $expire, ROOT_COOKIE, $cookie_domain, $secure);
-		/** Duplicate of above - Created by Find & Replace
-		setcookie($auth_cookie_name, $auth_cookie, $expire, ROOT_COOKIE, $cookie_domain, $secure);
-		*/
-		setcookie(LOGGED_IN_COOKIE, $logged_in_cookie, $expire, ROOT_COOKIE, $cookie_domain);
-		if ( ROOT_COOKIE != SITECOOKIEPATH )
-			setcookie(LOGGED_IN_COOKIE, $logged_in_cookie, $expire, ROOT_COOKIE, $domain);
-	}		
+	setcookie($auth_cookie_name, $auth_cookie, $expire, ROOT_COOKIE, $domain, $secure, true);
+	/** Duplicate of above - Created by Find & Replace
+	setcookie($auth_cookie_name, $auth_cookie, $expire, ROOT_COOKIE, $domain, $secure, true);
+	 **/
+	setcookie(LOGGED_IN_COOKIE, $logged_in_cookie, $expire, ROOT_COOKIE, $domain, $secure_logged_in_cookie, true);
+	if ( COOKIEPATH != SITECOOKIEPATH )
+		setcookie(LOGGED_IN_COOKIE, $logged_in_cookie, $expire, SITECOOKIEPATH, COOKIE_DOMAIN, $secure_logged_in_cookie, true);
 }
 
 endif;
@@ -143,25 +129,42 @@ function wp_clear_auth_cookie() {
 			$domain = COOKIE_DOMAIN;
 	}
 
+	/** Clear "normal cookies" **/
 
-	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ADMIN_COOKIE_PATH, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ADMIN_COOKIE_PATH, COOKIE_DOMAIN);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, PLUGINS_COOKIE_PATH, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, PLUGINS_COOKIE_PATH, COOKIE_DOMAIN);
+	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
+	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	
+	// Old cookies
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	
+	// Even older cookies
+	setcookie(USER_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
+	setcookie(PASS_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
+	setcookie(USER_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	setcookie(PASS_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+
+	/** Clear ROOT_COOKIEs **/
+	
 	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
 	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
 	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, $domain);
-
+	
 	// Old cookies
 	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	setcookie(AUTH_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, $domain);
 	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, $domain);
-
+	
 	// Even older cookies
 	setcookie(USER_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
 	setcookie(PASS_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	setcookie(USER_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, $domain);
-	setcookie(PASS_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, $domain);
+	
+	
 }
 endif;
 
