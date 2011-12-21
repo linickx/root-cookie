@@ -2,8 +2,8 @@
 Contributors: linickx, sc0ttkclark
 Donate link: http://www.linickx.com/index.php?content=donate
 Tags: login, logout, authentication, cookie, subdomains, root, path
-Requires at least: 2.6
-Tested up to: 3.1.3
+Requires at least: 3.2
+Tested up to: 3.3
 Stable tag: 1.5
 
 Changes the cookie default path to / (i.e. the whole domain.com not just domain.com/blog) with an option to go across subdomains
