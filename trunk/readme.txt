@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: linickx, sc0ttkclark
-Donate link: http://www.linickx.com/index.php?content=donate
+Donate link: http://www.linickx.com/donate
 Tags: login, logout, authentication, cookie, subdomains, root, path
 Requires at least: 3.2
 Tested up to: 3.3
@@ -37,7 +37,15 @@ e.g.
 1. Log in
 1. Done :o)
 
+== Screenshots ==
+
+1. The Admin interface, optional for if you want to change the domain.
+
 == Changelog ==
+
+= 1.5.4 = 
+* WordPress 3.3 Compatability Update, hat tip for Joe Auty (http://www.netmusician.org) for Rasing.
+* Logout Enhancement
 
 = 1.5.3 =
 * Bug fix "undefined method WP_Error::get_items"
@@ -66,7 +74,7 @@ e.g.
 * Added the safety hook 'if(!function_exists('wp_setcookie')' since WP2.1 crashed out.
 
 = 1.0 =
-*Original Release.
+* Original Release.
 
 == Frequently Asked Questions ==
 
@@ -103,3 +111,7 @@ It is possible to use this plugin such that if you are logged into one WordPress
 == Support ==
 
 Comments on my website are welcome, but please post [in this WordPress Forum](http://wordpress.org/tags/root-cookie?forum_id=10#postform)
+
+== Upgrade Notice ==
+
+Optional, but recommended.
