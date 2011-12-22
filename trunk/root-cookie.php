@@ -129,41 +129,66 @@ function wp_clear_auth_cookie() {
 			$domain = COOKIE_DOMAIN;
 	}
 
-	/** Clear "normal cookies" **/
+	/** Clear All possible cookies **/
 
 	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ADMIN_COOKIE_PATH, COOKIE_DOMAIN);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ADMIN_COOKIE_PATH, $domain);
+	
 	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ADMIN_COOKIE_PATH, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ADMIN_COOKIE_PATH, $domain);
+
 	setcookie(AUTH_COOKIE, ' ', time() - 31536000, PLUGINS_COOKIE_PATH, COOKIE_DOMAIN);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, PLUGINS_COOKIE_PATH, $domain);
+	
 	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, PLUGINS_COOKIE_PATH, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, PLUGINS_COOKIE_PATH, $domain);
+	
 	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
+	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
+	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, COOKIEPATH, $domain);
+	
 	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, $domain);
 	
 	// Old cookies
 	setcookie(AUTH_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, COOKIEPATH, $domain);
+	
 	setcookie(AUTH_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	setcookie(AUTH_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, $domain);
+
 	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, COOKIEPATH, $domain);
+	
 	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, $domain);
 	
 	// Even older cookies
 	setcookie(USER_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
-	setcookie(PASS_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
-	setcookie(USER_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
-	setcookie(PASS_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
-
-	/** Clear ROOT_COOKIEs **/
-	
-	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	setcookie(LOGGED_IN_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	
-	// Old cookies
-	setcookie(AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	setcookie(SECURE_AUTH_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	
-	// Even older cookies
+	setcookie(USER_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
 	setcookie(USER_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
-	setcookie(PASS_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
+	setcookie(USER_COOKIE, ' ', time() - 31536000, COOKIEPATH, $domain);
 	
+	setcookie(PASS_COOKIE, ' ', time() - 31536000, COOKIEPATH, COOKIE_DOMAIN);
+	setcookie(PASS_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, COOKIE_DOMAIN);
+	setcookie(PASS_COOKIE, ' ', time() - 31536000, ROOT_COOKIE, $domain);
+	setcookie(PASS_COOKIE, ' ', time() - 31536000, COOKIEPATH, $domain);
+	
+	setcookie(USER_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	setcookie(USER_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, $domain);
+
+	setcookie(PASS_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, COOKIE_DOMAIN);
+	setcookie(PASS_COOKIE, ' ', time() - 31536000, SITECOOKIEPATH, $domain);
+
 	
 }
 endif;
@@ -302,7 +327,7 @@ if(!$checked){
 <?php
 	# Let's tell users about RK :)
 	$lnx_feed = fetch_feed('http://www.linickx.com/tag/root-cookie/feed');
-	echo "<h3>Root Cookie News &amp; Tutorials</h3>";
+	echo "<h3>Root Cookie News</h3>";
 	echo "<ul>";
 	if (isset($lnx_feed->errors)) { 
 		echo '<li><b>Error Downloading Feed</b>. Looks like you are going to have to visit <a href="http://www.linickx.com/tag/root-cookie/feed">http://www.linickx.com/tag/root-cookie/feed</a> manually to keep up with the news! </li>';
